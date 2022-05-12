@@ -1,100 +1,93 @@
 using Api.Services.Interfaces;
-using Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Api.Models;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Api.Controllers;
-
-[ApiController]
-[Route("api/inventory")]
-public class InventoryController : ControllerBase
+namespace Api.Controllers
 {
-    private readonly IInventoryService _inventoryService;
-
-    public InventoryController(IInventoryService inventoryService)
+    [Authorize]
+    [ApiController]
+    [Route("api/inventory")]
+    public class InventoryController : ControllerBase
     {
-        _inventoryService = inventoryService;
-    }
+        private readonly IInventoryService _inventoryService;
 
-    [HttpGet]
-    [Route("get")]
-    public IActionResult Get()
-    {
-        var inventories = _inventoryService.GetAll();
-
-        if (inventories == null)
+        public InventoryController(IInventoryService inventoryService)
         {
-            return NoContent();
+            _inventoryService = inventoryService;
         }
 
-        return Ok(inventories);
-    }
-
-    [HttpGet]
-    [Route("get/{id:int}")]
-    public IActionResult Get(int id)
-    {
-        var inventory = id > 0 ? _inventoryService.GetById(id) : null;
-
-        if (inventory == null)
+        [HttpGet]
+        [Route("get")]
+        public ActionResult<IEnumerable<WebInventory>> Get()
         {
-            return NoContent();
-        }
+            var inventories = _inventoryService.GetAll();
 
-        return Ok(inventory);
-    }
-
-    [HttpPost]
-    [Route("create")]
-    public IActionResult Post([FromBody] Inventory inventory)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var inventoryResponse = _inventoryService.Create(inventory);
-
-        if (inventoryResponse == null)
-        {
-            return Conflict();
-        }
-
-        return Ok(inventoryResponse);
-    }
-
-    [HttpPut]
-    [Route("update")]
-    public IActionResult Put([FromBody] Inventory inventory)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var inventoryResponse = _inventoryService.Update(inventory);
-
-        if (inventoryResponse == null)
-        {
-            return Conflict();
-        }
-
-        return Ok(inventoryResponse);
-    }
-
-    [HttpDelete]
-    [Route("delete/{id:int}")]
-    public IActionResult Delete(int id)
-    {
-        if (id > 0)
-        {
-            var deleted = _inventoryService.Delete(id);
-
-            if (deleted)
+            if (inventories == null)
             {
-                return Ok();
+                return NoContent();
             }
+
+            return Ok(inventories);
         }
 
-        return BadRequest();
+        [HttpGet]
+        [Route("get/{id:int}")]
+        public ActionResult<WebInventory> Get(int id)
+        {
+            var inventory = id > 0 ? _inventoryService.GetById(id) : null;
+
+            if (inventory == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(inventory);
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public ActionResult<WebInventory> Post([FromBody] WebInventory inventory)
+        {
+            var inventoryResponse = _inventoryService.Create(inventory);
+
+            if (inventoryResponse == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(inventoryResponse);
+        }
+
+        [HttpPut]
+        [Route("update")]
+        public ActionResult<WebInventory> Put([FromBody] WebInventory inventory)
+        {
+            var inventoryResponse = _inventoryService.Update(inventory);
+
+            if (inventoryResponse == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(inventoryResponse);
+        }
+
+        [HttpDelete]
+        [Route("delete/{id:int}")]
+        public ActionResult<bool> Delete(int id)
+        {
+            if (id > 0)
+            {
+                var deleted = _inventoryService.Delete(id);
+
+                if (deleted)
+                {
+                    return Ok();
+                }
+            }
+
+            return BadRequest();
+        }
     }
 }

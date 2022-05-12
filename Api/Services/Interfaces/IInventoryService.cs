@@ -1,73 +1,42 @@
-using Api.Services.Interfaces;
 using Api.Models;
 
-namespace Api.Services;
-
-public class InventoryService : IInventoryService
+namespace Api.Services.Interfaces
 {
-    public IEnumerable<Inventory> GetAll()
+    public interface IInventoryService
     {
-        return new List<Inventory>(){
-            new Inventory{
-                Id = 1,
-                Name = "Item 1",
-                Description = "Item 1 description",
-                Quantity = 1,
-                Price = 1.99m,
-                AddedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                DeletedAt = DateTime.Now
-            },
-        };
-    }
+        /// <summary>
+        /// Get all inventories
+        /// </summary>
+        /// <returns>List of inventories</returns>
+        IEnumerable<WebInventory>? GetAll();
 
-    public Inventory GetById(int id)
-    {
-        return new Inventory
-        {
-            Id = 1,
-            Name = "Item 1",
-            Description = "Item 1 description",
-            Quantity = 1,
-            Price = 1.99m,
-            AddedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            DeletedAt = DateTime.Now
-        };
-    }
+        /// <summary>
+        /// Get inventory by id
+        /// </summary>
+        /// <param name="id">WebInventory id</param>
+        /// <returns>WebInventory</returns>
+        WebInventory? GetById(int id);
 
-    public Inventory Create(Inventory inventory)
-    {
-        return new Inventory
-        {
-            Id = 1,
-            Name = "Item 1",
-            Description = "Item 1 description",
-            Quantity = 1,
-            Price = 1.99m,
-            AddedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            DeletedAt = DateTime.Now
-        };
-    }
+        /// <summary>
+        /// Create new inventory
+        /// </summary>
+        /// <param name="webInventory">Web Inventory</param>
+        /// <returns>WebInventory</returns>
+        /// <returns>null if fail</returns>
+        WebInventory? Create(WebInventory webInventory);
 
-    public Inventory Update(Inventory inventory)
-    {
-        return new Inventory
-        {
-            Id = 1,
-            Name = "Item 1",
-            Description = "Item 1 description",
-            Quantity = 1,
-            Price = 1.99m,
-            AddedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            DeletedAt = DateTime.Now
-        };
-    }
+        /// <summary>
+        /// Update inventory
+        /// </summary>
+        /// <param name="webInventory">Web Inventory</param>
+        /// <returns>WebInventory</returns>
+        WebInventory? Update(WebInventory webInventory);
 
-    public bool Delete(int id)
-    {
-        return false;
+        /// <summary>
+        /// Delete inventory
+        /// </summary>
+        /// <param name="id">WebInventory id</param>
+        /// <returns>true or false result</returns>
+        bool Delete(int id);
     }
 }
