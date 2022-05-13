@@ -34,7 +34,7 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            return Ok(token);
+            return Ok(new { token = token });
         }
 
         [AllowAnonymous]
@@ -47,16 +47,11 @@ namespace Api.Controllers
                 return BadRequest();
             }
 
-            var registered = _authService.RegisterNewUser(user);
+            var token = _authService.RegisterNewUser(user);
 
-            if (registered)
+            if (!string.IsNullOrEmpty(token))
             {
-                var token = _authService.GetAuthenticationToken(user);
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    return Ok(token);
-                }
+                return Ok(new { token =  token});
             }
 
             return Unauthorized();

@@ -39,7 +39,7 @@ namespace Api.Services
             return string.Empty;
         }
 
-        public bool RegisterNewUser(WebUser webUser)
+        public string RegisterNewUser(WebUser webUser)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Api.Services
 
                 if (user != null)
                 {
-                    return false;
+                    return String.Empty;
                 }
 
                 user = new User
@@ -62,7 +62,7 @@ namespace Api.Services
                 
                 if (saved > 0)
                 {
-                    return true;
+                    return GetTokens(user);
                 }
             }
             catch
@@ -70,7 +70,7 @@ namespace Api.Services
                 // log error
             }
 
-            return false;
+            return String.Empty;
         }
 
         private bool CheckPassword(WebUser webUser, User user)
